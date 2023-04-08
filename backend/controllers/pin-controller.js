@@ -4,6 +4,7 @@ const Pin = require('../models/Pin');
 exports.index = async (req, res) => {
   try {
   let pins = await Pin.find();
+  // console.log(pins)
   res.status(200).json({ status: true, message: 'Success', data: pins });
 
   } catch (error) {

@@ -45,7 +45,7 @@ export default function Register({ setShowRegister }) {
           Register
         </button>
         {success && (
-          <span className="success">Successfull. You can login now!</span>
+          <span className="success">Successful. You can login now!</span>
         )}
         {error && <span className="failure">Something went wrong!</span>}
       </form>

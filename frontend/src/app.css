@@ -1,3 +1,12 @@
+.leaflet-container{
+  width: 100vw;
+  height: 100vh;
+}
+
+.leaflet-popup-content p {
+  margin: 0.2em 0;
+}
+
 .card {
   width: 250px;
   height: 250px;
@@ -27,7 +36,7 @@ label {
 }
 
 .date {
-  font-size: 12px;
+  font-size: 10px;
 }
 
 form {

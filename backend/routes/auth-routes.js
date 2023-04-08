@@ -6,10 +6,10 @@ const {
   forgotPassword,
   resetPassword,
   info,
-  // addClients,
-  // signout,
-  // multiLogin,
-  // loginWithPreviousRevoke,
+  addClients,
+  signout,
+  multiLogin,
+  loginWithPreviousRevoke,
 } = require('../controllers/auth-controller');
 
 const auth = require('../middlewares/auth');
@@ -27,13 +27,13 @@ router.post('/login', login);
  * @method POST
  * @controllerMethod multiLogin
  */
-// router.post('/multi-login', multiLogin);
+router.post('/multi-login', multiLogin);
 
 /**
  * @method POST
  * @controllerMethod loginWithPreviousRevoke
  */
-// router.post('/login-with-revoke', loginWithPreviousRevoke);
+router.post('/login-with-revoke', loginWithPreviousRevoke);
 
 /**
  * @method POST
@@ -63,7 +63,7 @@ router.get('/info', auth, info);
  * @method GET
  * @controllerMethod signout
  */
-// router.get('/signout', signout);
+router.get('/signout', signout);
 
 // router.get('/generate-tokens', addClients);
 

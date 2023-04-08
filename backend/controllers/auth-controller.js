@@ -22,6 +22,7 @@ exports.login = async (req, res) => {
         if (user.verified) {
           const client = await AuthClients.findOne({ provider: 'users' });
 
+          //check if a token is currently active
           const isAllowed = await TokenController.allowSignIn(user.id, client.id);
 
           if (isAllowed) {
@@ -35,7 +36,7 @@ exports.login = async (req, res) => {
 
             const token = jwt.sign(
               { id: user._id, tokenId: newToken.id },
-              'process.env.secret_key',
+              process.env.secret_key,
               {
                 expiresIn: expiryDate,
               }
@@ -74,119 +75,123 @@ exports.login = async (req, res) => {
   }
 };
 
-// exports.multiLogin = async (req, res) => {
-//   try {
-//     const user = await User.findOne({ email: req.body.email });
-//     if (user != null) {
-//       const correctPassword = await bcrypt.compare(
-//         req.body.password,
-//         user.password
-//       );
-//       if (correctPassword) {
-//         if (user.verified) {
-//           //Second Scenario:
-//           const client = await AuthClients.findOne({ provider: 'users' });
+exports.multiLogin = async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (user != null) {
+      const correctPassword = bcrypt.compare(
+        req.body.password,
+        user.password
+      );
+      if (correctPassword) {
+        if (user.verified) {
+          //Second Scenario:
+          const client = await AuthClients.findOne({ provider: 'users' });
 
-//           const expiryDate = addDays(30);
+          const expiryDate = addDays(30);
 
-//           const newToken = await TokenController.saveNewToken(
-//             user.id,
-//             client.id,
-//             expiryDate
-//           );
-//           // console.log('New Token: ', newToken.id);
+          const newToken = await TokenController.saveNewToken(
+            user.id,
+            client.id,
+            expiryDate
+          );
+          // console.log('New Token: ', newToken.id);
 
-//           const token = jwt.sign(
-//             { id: user._id, tokenId: newToken.id },
-//             'process.env.secret_key',
-//             {
-//               expiresIn: expiryDate,
-//             }
-//           );
+          const token = jwt.sign(
+            { id: user._id, tokenId: newToken.id },
+            process.env.secret_key,
+            {
+              expiresIn: expiryDate,
+            }
+          );
 
-//           user['_doc'].token = token;
+          user['_doc'].token = token;
 
-//           // const data = { ...user._doc, token };
-//           return res.status(200).json({
-//             status: true,
-//             message: 'Logged in successfully',
-//             user: user,
-//           });
-//         }
-//         return res.status(400).json({
-//           status: false,
-//           message: 'Account is not verified, verify to login',
-//         });
-//       }
-//       return res.status(400).json({
-//         status: false,
-//         message: 'Error credentials, check email or password',
-//       });
-//     }
-//     return res.status(400).json({
-//       status: false,
-//       message: 'No account attached to this email',
-//     });
-//   } catch (error) {}
-// };
+          // const data = { ...user._doc, token };
+          return res.status(200).json({
+            status: true,
+            message: 'Logged in successfully',
+            user: user,
+          });
+        }
+        return res.status(400).json({
+          status: false,
+          message: 'Account is not verified, verify to login',
+        });
+      }
+      return res.status(400).json({
+        status: false,
+        message: 'Error credentials, check email or password',
+      });
+    }
+    return res.status(400).json({
+      status: false,
+      message: 'No account attached to this email',
+    });
+  } catch (error) {
+    console.log("Error: ", error);
+  }
+};
 
-// exports.loginWithPreviousRevoke = async (req, res) => {
-//   try {
-//     const user = await User.findOne({ email: req.body.email });
-//     if (user != null) {
-//       const correctPassword = await bcrypt.compare(
-//         req.body.password,
-//         user.password
-//       );
-//       if (correctPassword) {
-//         if (user.verified) {
-//           //Third Scenario:
-//           await TokenController.revokePreviousToken(user.id);
+exports.loginWithPreviousRevoke = async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (user != null) {
+      const correctPassword = bcrypt.compare(
+        req.body.password,
+        user.password
+      );
+      if (correctPassword) {
+        if (user.verified) {
+          //Third Scenario:
+          await TokenController.revokePreviousToken(user.id);
 
-//           const client = await AuthClients.findOne({ provider: 'users' });
+          const client = await AuthClients.findOne({ provider: 'users' });
 
-//           const expiryDate = addDays(30);
+          const expiryDate = addDays(30);
 
-//           const newToken = await TokenController.saveNewToken(
-//             user.id,
-//             client.id,
-//             expiryDate
-//           );
-//           // console.log('New Token: ', newToken.id);
+          const newToken = await TokenController.saveNewToken(
+            user.id,
+            client.id,
+            expiryDate
+          );
+          // console.log('New Token: ', newToken.id);
 
-//           const token = jwt.sign(
-//             { id: user._id, tokenId: newToken.id },
-//             'process.env.secret_key',
-//             {
-//               expiresIn: expiryDate,
-//             }
-//           );
+          const token = jwt.sign(
+            { id: user._id, tokenId: newToken.id },
+            process.env.secret_key,
+            {
+              expiresIn: expiryDate,
+            }
+          );
 
-//           user['_doc'].token = token;
+          user['_doc'].token = token;
 
-//           // const data = { ...user._doc, token };
-//           return res.status(200).json({
-//             status: true,
-//             message: 'Logged in successfully',
-//             user: user,
-//           });
-//         }
-//         return res.status(400).json({
-//           status: false,
-//           message: 'Account is not verified, verify to login',
-//         });
-//       }
-//       return res.status(400).json({
-//         status: false,
-//         message: 'Error credentials, check email or password',
-//       });
-//     }
-//     return res.status(400).json({
-//       status: false,
-//       message: 'No account attached to this email',
-//     });
-//   } catch (error) {}
-// };
+          // const data = { ...user._doc, token };
+          return res.status(200).json({
+            status: true,
+            message: 'Logged in successfully',
+            user: user,
+          });
+        }
+        return res.status(400).json({
+          status: false,
+          message: 'Account is not verified, verify to login',
+        });
+      }
+      return res.status(400).json({
+        status: false,
+        message: 'Error credentials, check email or password',
+      });
+    }
+    return res.status(400).json({
+      status: false,
+      message: 'No account attached to this email',
+    });
+  } catch (error) {
+    console.log("Error: ", error);
+  }
+};
 
 exports.signout = async (req, res) => {
   TokenController.revokePreviousToken(req.userId);
