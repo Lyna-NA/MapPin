@@ -7,6 +7,7 @@ import {format} from "timeago.js"
 import "./app.css";
 import blackMapIcon from './images/blackIcon.png';
 import redMapIcon from './images/redIcon.png';
+import LocationMarker from "./components/LocationMarker";
 
 function App() {
 
@@ -27,7 +28,6 @@ function App() {
 
   const currentUser = "Lyna";
   const [pins, setPins] = useState([]);
-
 
   const getPins = async () => {
     try {
@@ -50,31 +50,31 @@ function App() {
       attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
       />
       {pins.map((pin) => (
-        <Marker position={[pin.latitude, pin.longitude]} icon={pin.username === currentUser? redIcon:blackIcon}>
-        <Popup>
-          <div className="card">
-            <label>Place</label>
-            <h3 className="place">{pin.title}</h3>
-            <label>Review</label>
-            <p className="desc">{pin.desc}</p>
-            <label>Rating</label>
-            <div className="stars">
-              <Star className="star"/>
-              <Star className="star"/>
-              <Star className="star"/>
-              <Star className="star"/>
-              <Star className="star"/>
-              <Star className="star"/>
-              <Star className="star"/>
+        <Marker position={[pin.latitude, pin.longitude]} icon={pin.username === currentUser? redIcon:blackIcon} key={pin._id}>
+          <Popup>
+            <div className="card">
+              <label>Place</label>
+              <h3 className="place">{pin.title}</h3>
+              <label>Review</label>
+              <p className="desc">{pin.desc}</p>
+              <label>Rating</label>
+              <div className="stars">
+                <Star className="star"/>
+                <Star className="star"/>
+                <Star className="star"/>
+                <Star className="star"/>
+                <Star className="star"/>
+                <Star className="star"/>
+                <Star className="star"/>
+              </div>
+              <label>Information</label>
+              <span className="username">Created by <b>{pin.username}</b></span>
+              <span className="date">{format(pin.createdAt)}</span>
             </div>
-            <label>Information</label>
-            <span className="username">Created by <b>{pin.username}</b></span>
-            <span className="date">{format(pin.createdAt)}</span>
-          </div>
-        </Popup>
-      </Marker>
+          </Popup>
+        </Marker>
       ))}
-
+      <LocationMarker/>
     </MapContainer>
   );
 }

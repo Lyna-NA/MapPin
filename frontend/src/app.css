@@ -70,13 +70,28 @@ textarea {
   border-bottom: 1px solid gray;
 }
 
-.submitButton {
+.btns{
+  display: flex;
+  flex-direction: row;
+  column-gap: 5px;
+  width: 100%;
+}
+
+.btn{
   border: none;
   padding: 5px;
   border-radius: 5px;
   color: white;
-  background-color: tomato;
   cursor: pointer;
+  width: 100%;
+}
+
+.cancelBtn{
+  background-color: tomato;
+}
+
+.submitBtn {
+  background-color: green;
 }
 
 .buttons,
