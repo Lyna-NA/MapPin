@@ -1,6 +1,6 @@
 # MapPin | React Node Travel Map App MERN Stack
 
-React.js - Node.js Full-stack map pinning travel app using React hooks, Leaflet, Express, and MongoDB.
+React.js - Node.js Full-stack map pinning travel app using React hooks, Leaflet, React-Leaflet, Express, and MongoDB.
 With this application, you can pin locations and share your reviews with other users.
 
 >Overview
