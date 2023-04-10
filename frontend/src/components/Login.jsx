@@ -1,37 +1,41 @@
-import { Cancel, Room } from "@material-ui/icons";
+import { Close, Room } from "@material-ui/icons";
 import axios from "axios";
 import { useRef, useState } from "react";
 import "./login.css";
 
-export default function Login({ setShowLogin, setCurrentUsername,myStorage }) {
+export default function Login({ setShowLogin, myStorage, setCurrentUsername}) {
+
   const [error, setError] = useState(false);
-  const usernameRef = useRef();
+  const emailRef = useRef();
   const passwordRef = useRef();
 
-  const handleSubmit = async (e) => {
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
     const user = {
-      username: usernameRef.current.value,
+      email: emailRef.current.value,
       password: passwordRef.current.value,
     };
     try {
-      const res = await axios.post("/users/login", user);
-      setCurrentUsername(res.data.username);
-      myStorage.setItem('user', res.data.username);
-      setShowLogin(false)
+      const res = await axios.post("/auth/login", user);
+      myStorage.setItem('user', res.data.user.username);
+      setCurrentUsername(res.data.user.username);
+      setShowLogin(false);
+      console.log(res);
+      console.log(res.data.user.username)
     } catch (err) {
       setError(true);
+      console.log("ERROR: ", err);
     }
   };
 
   return (
     <div className="loginContainer">
-      <div className="logo">
+      <div className="loginLogo">
         <Room className="logoIcon" />
-        <span>LamaPin</span>
+        <span>MapPin</span>
       </div>
-      <form onSubmit={handleSubmit}>
-        <input autoFocus placeholder="username" ref={usernameRef} />
+      <form onSubmit={onSubmitHandler}>
+        <input autoFocus placeholder="email" ref={emailRef} type="email"/>
         <input
           type="password"
           min="6"
@@ -43,7 +47,7 @@ export default function Login({ setShowLogin, setCurrentUsername,myStorage }) {
         </button>
         {error && <span className="failure">Something went wrong!</span>}
       </form>
-      <Cancel className="loginCancel" onClick={() => setShowLogin(false)} />
+      <Close className="loginCancel" onClick={() => setShowLogin(false)} />
     </div>
   );
 }

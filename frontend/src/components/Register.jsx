@@ -1,16 +1,18 @@
-import { Cancel, Room } from "@material-ui/icons";
+import { Close, Room } from "@material-ui/icons";
 import axios from "axios";
 import { useRef, useState } from "react";
 import "./register.css";
 
 export default function Register({ setShowRegister }) {
+  
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
   const usernameRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
 
-  const handleSubmit = async (e) => {
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
     const newUser = {
       username: usernameRef.current.value,
@@ -19,20 +21,26 @@ export default function Register({ setShowRegister }) {
     };
 
     try {
-      await axios.post("/users/register", newUser);
+      const res = await axios.post("/users", newUser);
       setError(false);
       setSuccess(true);
+      setIsRegistered(true);
+      console.log(res);
     } catch (err) {
       setError(true);
+      setSuccess(false);
+      setIsRegistered(false);
+      console.log(err)
     }
   };
+
   return (
     <div className="registerContainer">
-      <div className="logo">
+      <div className="registerLogo">
         <Room className="logoIcon" />
-        <span>LamaPin</span>
+        <span>MapPin</span>
       </div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={onSubmitHandler}>
         <input autoFocus placeholder="username" ref={usernameRef} />
         <input type="email" placeholder="email" ref={emailRef} />
         <input
@@ -41,15 +49,13 @@ export default function Register({ setShowRegister }) {
           placeholder="password"
           ref={passwordRef}
         />
-        <button className="registerBtn" type="submit">
+        <button className="registerBtn" type="submit" disabled={isRegistered}>
           Register
         </button>
-        {success && (
-          <span className="success">Successful. You can login now!</span>
-        )}
+        {success && <span className="success">Successful. You can login now!</span>}
         {error && <span className="failure">Something went wrong!</span>}
       </form>
-      <Cancel
+      <Close
         className="registerCancel"
         onClick={() => setShowRegister(false)}
       />

@@ -19,23 +19,25 @@ exports.login = async (req, res) => {
       );
 
       if (correctPassword) {
-        if (user.verified) {
-          const client = await AuthClients.findOne({ provider: 'users' });
+        // if (user.verified) {
+          // const client = await AuthClients.findOne({ provider: 'users' });
 
           //check if a token is currently active
-          const isAllowed = await TokenController.allowSignIn(user.id, client.id);
+          // const isAllowed = await TokenController.allowSignIn(user.id, client.id);
 
-          if (isAllowed) {
+          // if (isAllowed) {
             const expiryDate = addDays(30);
 
-            const newToken = await TokenController.saveNewToken(
-              user.id,
-              client.id,
-              expiryDate
-            );
+            // const newToken = await TokenController.saveNewToken(
+            //   user.id,
+            //   client.id,
+            //   expiryDate
+            // );
 
             const token = jwt.sign(
-              { id: user._id, tokenId: newToken.id },
+              { id: user._id
+                // ,tokenId: newToken.id 
+                },
               process.env.secret_key,
               {
                 expiresIn: expiryDate,
@@ -50,16 +52,16 @@ exports.login = async (req, res) => {
               message: 'Logged in successfully',
               user: user,
             });
-          }
-          return res.status(401).json({
-            status: false,
-            message: 'Login rejected due to an existing login session',
-          });
-        }
-        return res.status(400).json({
-          status: false,
-          message: 'Account is not verified, verify to login',
-        });
+          // }
+          // return res.status(401).json({
+          //   status: false,
+          //   message: 'Login rejected due to an existing login session',
+          // });
+        // }
+        // return res.status(400).json({
+        //   status: false,
+        //   message: 'Account is not verified, verify to login',
+        // });
       }
       return res.status(400).json({
         status: false,

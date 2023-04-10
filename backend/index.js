@@ -22,7 +22,7 @@ const app = express();
 app.use(express.json());
 
 // apply the limiter to all requests
-app.use(rateLimitMiddleware);
+// app.use(rateLimitMiddleware);
 
 //app.use: routes
 app.use('/api/users', userRoutes);

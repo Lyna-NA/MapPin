@@ -4,14 +4,14 @@ import * as L from "leaflet";
 import redMapIcon from '../images/redIcon.png';
 import axios from "axios";
 
-function LocationMarker(){
+function LocationMarker(props){
 
     const titleRef = useRef();
     const reviewRef = useRef();
     const ratingRef = useRef();
-    const popupRef = useRef();
     const [position, setPosition] = useState(null);
-    const currentUser = "Lyna";
+    const [showPopup, setShowPopup] = useState(true);
+    const currentUser = window.localStorage.getItem("user");
 
 
     const LeafIcon = L.Icon.extend({
@@ -26,6 +26,7 @@ function LocationMarker(){
     const map = useMapEvents({
       dblclick(e) {
         setPosition(e.latlng);
+        setShowPopup(true);
       }
     })
 
@@ -40,20 +41,30 @@ function LocationMarker(){
         event.preventDefault();
 
         const newPin = {
-            username: currentUser,
-            title: titleRef.current.value,
-            desc: titleRef.current.value,
-            rating: ratingRef.current.value,
-            latitude: position.lat,
-            longitude: position.lng
+          username: currentUser,
+          title: titleRef.current.value,
+          desc: titleRef.current.value,
+          rating: ratingRef.current.value,
+          latitude: position.lat,
+          longitude: position.lng
         }
 
         try {
-            const res = await axios.post("/pins", newPin);
-            console.log(res);
+          const res = await axios.post("/pins", newPin);
+          props.setPins((prevState) => [res.data.data, ...prevState]);
         } catch (error) {
-            console.log(error);
+          console.log(error);
         }
+
+        clearForm();
+    }
+
+    const clearForm = () => {
+      titleRef.current.value ="";
+      reviewRef.current.value ="";
+      ratingRef.current.value ="";
+
+      setShowPopup(false);
     }
 
     const onCancelAddHandler = () => {
@@ -62,7 +73,7 @@ function LocationMarker(){
 
     return position === null ? null : (
       <Marker position={position} icon={redIcon}>
-        <Popup ref={popupRef}>
+        {showPopup && <Popup>
             <form onSubmit={onSubmitHandler}>
                 <label>Place</label>
                 <input placeholder="Enter a title" ref={titleRef}/>
@@ -81,7 +92,7 @@ function LocationMarker(){
                     <button className="cancelBtn btn" onClick={onCancelAddHandler}>Cancel</button>
                 </div>            
             </form>
-        </Popup>
+        </Popup>}
       </Marker>
     )
 }
