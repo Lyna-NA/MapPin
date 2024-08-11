@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { Star } from "@material-ui/icons";
+import { Star } from "@mui/icons-material";
 import * as L from "leaflet";
 import axios from "axios";
 import { format } from "timeago.js"
 import "./app.css";
 import blackMapIcon from './images/blackIcon.png';
 import redMapIcon from './images/redIcon.png';
-import LocationMarker from "./components/LocationMarker";
-import Register from "./components/Register";
-import Login from "./components/Login";
+import LocationMarker from "./components/LocationMarker.jsx";
+import Register from "./components/Register.jsx";
+import Login from "./components/Login.jsx";
 
 function App() {
 

@@ -1,4 +1,4 @@
-import { Close, Room } from "@material-ui/icons";
+import { Close, Room } from "@mui/icons-material";
 import axios from "axios";
 import { useRef, useState } from "react";
 import "./login.css";
