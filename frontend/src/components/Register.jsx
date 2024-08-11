@@ -4,7 +4,8 @@ import { useRef, useState } from "react";
 import "./register.css";
 
 export default function Register({ setShowRegister }) {
-  
+  const baseURL = process.env.REACT_APP_API_URL;
+
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
@@ -21,7 +22,7 @@ export default function Register({ setShowRegister }) {
     };
 
     try {
-      const res = await axios.post("/users", newUser);
+      const res = await axios.post(`${baseURL}/users`, newUser);
       setError(false);
       setSuccess(true);
       setIsRegistered(true);

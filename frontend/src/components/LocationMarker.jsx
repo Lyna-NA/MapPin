@@ -5,7 +5,7 @@ import redMapIcon from '../images/redIcon.png';
 import axios from "axios";
 
 function LocationMarker(props){
-
+    const baseURL = process.env.REACT_APP_API_URL;
     const titleRef = useRef();
     const reviewRef = useRef();
     const ratingRef = useRef();
@@ -50,7 +50,7 @@ function LocationMarker(props){
         }
 
         try {
-          const res = await axios.post("/pins", newPin);
+          const res = await axios.post(`${baseURL}/pins`, newPin);
           props.setPins((prevState) => [res.data.data, ...prevState]);
         } catch (error) {
           console.log(error);
